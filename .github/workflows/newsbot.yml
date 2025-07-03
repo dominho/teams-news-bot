@@ -1,0 +1,26 @@
+name: Daily Tech News to Teams
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Täglich um 06:00 UTC = 08:00 MEZ
+  workflow_dispatch:
+
+jobs:
+  send-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v3
+
+      - name: Python installieren
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Abhängigkeiten installieren
+        run: pip install feedparser requests
+
+      - name: Script ausführen
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+        run: python main.py
